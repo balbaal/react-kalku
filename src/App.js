@@ -1,28 +1,73 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react"
+import KalkuButton from "./KalkuButton"
+import KalkuResult from "./KalkuResult"
+import "./App.css"
 
-class App extends Component {
-  render() {
+class App extends Component{
+
+  constructor(){
+    super();
+    this.state = {
+      result: '0'
+    }
+  }
+
+  buttonPressedParent = (buttonName) => {
+    if(buttonName == "="){
+      this.onCalculate()
+    }else if(buttonName == "clear"){
+      this.onClear()
+    }else if(buttonName == "back"){
+      this.onBack()
+    }else{
+      if(this.state.result == "0"){
+        this.setState({
+          result: buttonName
+        })
+      }else{
+        this.setState({
+          result: this.state.result + buttonName
+        })
+      }
+    }
+  }
+
+  onClear = () => {
+    this.setState({
+      result: "0"
+    })
+  }
+
+  onBack = () => {
+    this.setState({
+      result: this.state.result.slice(0, -1)
+    })
+  }
+
+  onCalculate = () => {
+    try{
+      this.setState({
+        result: eval(this.state.result)
+      })
+    }catch(e){
+      this.setState({
+        result: "error"
+      })
+    }
+  }
+
+  render(){
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <div className="App">
+          <div className="calc-body">
+            <KalkuResult result = { this.state.result }/>
+            <KalkuButton buttonPressedParent = { this.buttonPressedParent } />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+export default App
